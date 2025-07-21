@@ -1,0 +1,76 @@
+{
+  "info": {
+    "name": "Scoreboard API (Live)",
+    "_postman_id": "12345678-1234-1234-1234-123456789abc",
+    "description": "Test Live Scoreboard API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Register",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"testpass\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3001/api/score/register",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3001",
+          "path": ["api", "score", "register"]
+        }
+      }
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"testpass\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3001/api/score/login",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3001",
+          "path": ["api", "score", "login"]
+        }
+      }
+    },
+    {
+      "name": "Get Top 10 Scores",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:3001/api/score/top10",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3001",
+          "path": ["api", "score", "top10 "]
+        }
+      }
+    },
+    {
+      "name": "Increment My Score",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "http://localhost:3001/api/score/increment",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3001",
+          "path": ["api", "score", "increment"]
+        }
+      }
+    }
+  ]
+}
