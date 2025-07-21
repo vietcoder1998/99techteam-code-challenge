@@ -1,21 +1,12 @@
 import express from 'express';
-import http from 'http';
-import scoreRoutes from './routes/score.routes';
-import { setupWebSocket } from './ws/scoreboard.ws';
+import resourceRoutes from './routes/resource.routes';
 import dotenv from 'dotenv';
-import path from 'path';
 
 dotenv.config();
 const app = express();
-const server = http.createServer(app);
-
 app.use(express.json());
-app.use('/api/score', scoreRoutes);
 
-// Serve the client dashboard
-app.use(express.static(path.join(__dirname, '../public')));
+app.use('/api/resources', resourceRoutes);
 
-setupWebSocket(server);
-
-const PORT = process.env.PORT || 3001;
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
