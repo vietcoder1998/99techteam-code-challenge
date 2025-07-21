@@ -1,0 +1,85 @@
+{
+  "info": {
+    "name": "Resource API (CRUD)",
+    "_postman_id": "12345678-1234-1234-1234-123456789abc",
+    "description": "Test CRUD API for Resource",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Resource",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Sample Resource\",\n  \"type\": \"book\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/resources",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "resources"]
+        }
+      }
+    },
+    {
+      "name": "Get All Resources",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:3000/api/resources",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "resources"]
+        }
+      }
+    },
+    {
+      "name": "Get Resource by ID",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:3000/api/resources/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "resources", "1"]
+        }
+      }
+    },
+    {
+      "name": "Update Resource",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Updated Resource\",\n  \"type\": \"article\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/resources/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "resources", "1"]
+        }
+      }
+    },
+    {
+      "name": "Delete Resource",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "http://localhost:3000/api/resources/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "resources", "1"]
+        }
+      }
+    }
+  ]
+}
