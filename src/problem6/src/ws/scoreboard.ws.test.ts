@@ -1,9 +1,30 @@
 import WebSocket from 'ws';
 import http from 'http';
 import { setupWebSocket, emitTopScores } from './scoreboard.ws';
-import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+// Mock user data
+const mockUserData = [
+  { id: 1, username: 'wsuser1', password: 'a', score: 10 },
+  { id: 2, username: 'wsuser2', password: 'b', score: 20 }
+];
+
+// Mock PrismaClient
+const prisma = {
+  user: {
+    deleteMany: jest.fn().mockImplementation(() => {
+      mockUserData.length = 0;
+      return Promise.resolve();
+    }),
+    createMany: jest.fn().mockImplementation(({ data }) => {
+      data.forEach((user: any, idx: number) => {
+        mockUserData.push({ id: mockUserData.length + 1, ...user });
+      });
+      return Promise.resolve();
+    }),
+    findMany: jest.fn().mockResolvedValue(mockUserData),
+  },
+  $disconnect: jest.fn().mockResolvedValue(undefined),
+} as any;
 
 // Helper to wait for a message from a WebSocket
 function waitForMessage(ws: WebSocket): Promise<any> {
@@ -20,7 +41,7 @@ describe('scoreboard.ws', () => {
 
   beforeAll((done) => {
     server = http.createServer();
-    setupWebSocket(server);
+    setupWebSocket(server); // Pass mock prisma here
     server.listen(0, () => {
       // @ts-ignore
       port = server.address().port;
@@ -42,11 +63,12 @@ describe('scoreboard.ws', () => {
       ]
     });
 
-    const ws = new WebSocket(`ws://localhost:${port}`);
+    // Connect to the correct WebSocket path
+    const ws = new WebSocket(`ws://localhost:${port}/ws/scoreboard`);
     await new Promise((resolve) => ws.on('open', resolve));
 
     // Trigger broadcast
-    await emitTopScores();
+    await emitTopScores(prisma);
     const message = await waitForMessage(ws);
     expect(message.type).toBe('top');
     expect(Array.isArray(message.data)).toBe(true);

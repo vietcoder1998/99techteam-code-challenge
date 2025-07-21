@@ -1,5 +1,5 @@
-import WebSocket from 'ws';
 import { PrismaClient } from '@prisma/client';
+import WebSocket from 'ws';
 
 const clients: WebSocket[] = [];
 const prisma = new PrismaClient();
@@ -21,8 +21,10 @@ export function setupWebSocket(server: any) {
   });
 }
 
-export async function emitTopScores() {
-  const top = await prisma.user.findMany({
+export async function emitTopScores(prismaDefault?: any) {
+  if (!clients.length) return; // No clients to send to
+  let prismaRef: any = prisma ?? prismaDefault ?? new PrismaClient();
+  const top = await prismaRef?.user.findMany({
     orderBy: { score: 'desc' },
     take: 10,
     select: { username: true, score: true }

@@ -4,9 +4,17 @@ import { emitTopScores } from '../ws/scoreboard.ws';
 import bcrypt from 'bcryptjs';
 import { createToken, validateCredentials } from '../utils/auth.middleware';
 
-const prisma = new PrismaClient();
+const defaultPrisma = new PrismaClient();
 
-export const increaseScore = async (req: Request, res: Response) => {
+function getPrismaFromArgs(args: any[]): PrismaClient {
+  // If last argument is a PrismaClient, use it; else use default
+  const last = args[args.length - 1];
+  if (last instanceof PrismaClient) return last;
+  return defaultPrisma;
+}
+
+export const increaseScore = async (req: Request, res: Response, ...args: any[]) => {
+  const prisma: any = getPrismaFromArgs(args);
   const userId = req.user.id;
   // Only allow the authenticated user to update their own score
   if (!userId) {
@@ -29,7 +37,8 @@ export const increaseScore = async (req: Request, res: Response) => {
   }
 };
 
-export const getTopScores = async (_req: Request, res: Response) => {
+export const getTopScores = async (_req: Request, res: Response, ...args: any[]) => {
+  const prisma: any = getPrismaFromArgs(args);
   const topUsers = await prisma.user.findMany({
     orderBy: { score: 'desc' },
     take: 10,
@@ -39,7 +48,8 @@ export const getTopScores = async (_req: Request, res: Response) => {
   return res.json(topUsers);
 };
 
-export const register = async (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response, ...args: any[]) => {
+  const prisma: any = getPrismaFromArgs(args);
   const { username, password } = req.body;
   const { valid, error } = validateCredentials(username, password);
   if (!valid) {
@@ -60,7 +70,8 @@ export const register = async (req: Request, res: Response) => {
   }
 };
 
-export const login = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response, ...args: any[]) => {
+  const prisma: any = getPrismaFromArgs(args);
   const { username, password } = req.body;
   const { valid, error } = validateCredentials(username, password);
   if (!valid) {
